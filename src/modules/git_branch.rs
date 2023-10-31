@@ -83,10 +83,18 @@ pub fn module<'a>(context: &'a Context) -> Option<Module<'a>> {
             .map(|variable| match variable {
                 "branch" => Some(Ok(graphemes.concat())),
                 "remote_branch" => {
-                    if show_remote && !remote_branch_graphemes.is_empty() {
-                        Some(Ok(remote_branch_graphemes.concat()))
+                    if !remote_branch_graphemes.is_empty() {
+                        if show_remote {
+                            Some(Ok(remote_branch_graphemes.concat()))
+                        } else {
+                            None
+                        }
                     } else {
-                        None
+                        if config.show_untracked {
+                            Some(Ok("(untracked)".to_owned()))
+                        } else {
+                            None
+                        }
                     }
                 }
                 "remote_name" => {
